@@ -28,7 +28,7 @@ class LocalSearch:
             (self.dist_mtx[f_s, f_k] - self.dist_mtx[f_r, f_k]))
         return delta
 
-    def solve(self, solution: np.array = None) -> Tuple[np.ndarray, float, np.ndarray]:
+    def solve(self, solution: np.array = None) -> Tuple[np.ndarray, float]:
         """Local search - first-improvement + don't look bits"""
         if solution is None:
             solution = np.random.permutation(self.N)
@@ -36,7 +36,7 @@ class LocalSearch:
             solution = np.array(solution)
 
         total_cost = self.total_cost(solution)
-        dont_look_bits = np.zeros_like(solution, dtype=bool)
+        dont_look_bits = np.zeros(self.N, dtype=bool)
 
         improved = True
         while improved:
@@ -47,18 +47,17 @@ class LocalSearch:
                 for r in range(self.N):
                     if s == r:
                         continue
-                    delta = self.delta_cost(solution, s, r)
+                    delta = self.delta_cost(solution, r, s)
                     if delta < 0:
-                        solution[s], solution[r] = solution[r], solution[s]
+                        solution[r], solution[s] = solution[s], solution[r]
                         total_cost += delta
-                        dont_look_bits[s] = False
                         dont_look_bits[r] = False
+                        dont_look_bits[s] = False
                         improved = True
                         break
                 else:
                     dont_look_bits[s] = True
-
-        return solution, total_cost, dont_look_bits
+        return solution, total_cost
 
 
 def read_qap_data(file_path: str) -> Tuple[List, List]:
@@ -73,12 +72,11 @@ def read_qap_data(file_path: str) -> Tuple[List, List]:
 
 
 if __name__ == '__main__':
-    ...
     # python -m src.local_search
     dist_list, flow_list = read_qap_data('benchmarks/tai20a')
 
     ls = LocalSearch(dist_list, flow_list)
 
-    sol, cost, bits = ls.solve()
+    sol, cost = ls.solve()
     print("Solution:", sol)
     print("Cost:", cost)
