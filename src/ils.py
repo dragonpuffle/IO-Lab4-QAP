@@ -44,6 +44,10 @@ class IteratedLocalSearch(LocalSearch):
 
         return best_solution, best_cost
 
+    def save_solution(self, file_path: str, solution: np.array) -> None:
+        with open(file_path, 'w') as file:
+            file.write(" ".join(map(str, solution)))
+
 
 if __name__ == "__main__":
     dist_list, flow_list = read_qap_data('benchmarks/tai20a')
@@ -51,5 +55,6 @@ if __name__ == "__main__":
     ils = IteratedLocalSearch(dist_list, flow_list, max_iters=100)
 
     sol, cost = ils.iterated_solve()
+    ils.save_solution("tai20a.sol", sol)
     print("Solution:", sol)
     print("Cost:", cost)
