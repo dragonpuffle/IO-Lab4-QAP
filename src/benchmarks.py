@@ -28,15 +28,22 @@ class Benchmark:
         for algorithm in self.algorithms:
             best_total_cost = float('inf')
             best_solution = []
-            total_time_start = time.time()
+            total_time = 0
             for _ in range(self.runs):
                 alg = algorithm(dist_list, flow_list)
-                solution, total_cost = alg.solve()
+                start = time.time()
+
+                if isinstance(alg, IteratedLocalSearch):
+                    solution, total_cost = alg.iterated_solve()
+                else:
+                    solution, total_cost = alg.solve()
+
+                total_time += time.time() - start
                 if total_cost < best_total_cost:
                     best_total_cost = total_cost
-                    best_solution = solution
+                    best_solution = solution.copy()
 
-            avg_time = (time.time() - total_time_start) / self.runs
+            avg_time = (total_time) / self.runs
             self.results.append({
                 'benchmark_id': int(benchmark[3:-1]),
                 'alg': algorithm.__name__,
@@ -45,7 +52,8 @@ class Benchmark:
                 'avg_time_sec': round(avg_time, 7),
                 'solution': " ".join(map(str, best_solution))
             })
-            self.save_solution("results/"+benchmark + ".sol", best_solution)
+            if algorithm is IteratedLocalSearch:
+                self.save_solution("results/"+benchmark + ".sol", best_solution)
 
     def save_solution(self, file_path: str, solution: np.array) -> None:
         with open(file_path, 'w') as file:
