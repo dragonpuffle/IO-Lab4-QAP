@@ -63,6 +63,6 @@ class Benchmark:
 
 
 if __name__ == '__main__':
-    benchmark = Benchmark((LocalSearch,), 'benchmarks', 20)
+    benchmark = Benchmark((LocalSearch, IteratedLocalSearch), 'benchmarks', 20)
     benchmark.run_all()
 
