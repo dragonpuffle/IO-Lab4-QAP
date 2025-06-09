@@ -20,7 +20,7 @@ python -m main
 
 Мы реализовали локальный и итеративный локальный поиск для решения Quadratic Assignment Problem.
 
-**Результаты работы сохранены в папку results подпапках local_search и iterated_local_search для соответствующих алгоритмов с расширением .sol**
+**Результаты работы сохранены в папку results в подпапках local_search и iterated_local_search для соответствующих алгоритмов с расширением .sol**
 
 Локальный поиск был реализован с помощью first-improvement, + don't look bits массив для ускорения работы
 
