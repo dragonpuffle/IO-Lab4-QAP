@@ -53,7 +53,9 @@ class Benchmark:
                 'solution': " ".join(map(str, best_solution))
             })
             if algorithm is IteratedLocalSearch:
-                self.save_solution("results/"+benchmark + ".sol", best_solution)
+                self.save_solution("results/iterated_local_search/"+benchmark + ".sol", best_solution)
+            elif algorithm is LocalSearch:
+                self.save_solution("results/local_search/"+benchmark + ".sol", best_solution)
 
     def save_solution(self, file_path: str, solution: np.array) -> None:
         with open(file_path, 'w') as file:
@@ -61,6 +63,6 @@ class Benchmark:
 
 
 if __name__ == '__main__':
-    benchmark = Benchmark((LocalSearch, IteratedLocalSearch), 'benchmarks', 20)
+    benchmark = Benchmark((LocalSearch,), 'benchmarks', 20)
     benchmark.run_all()
 
